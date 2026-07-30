@@ -27,15 +27,20 @@ const AppLayout = () => {
   const user = profileQUery?.data?.data;
 
   useEffect(() => {
-    dispatch(
-      setUser({
-        _id: user?.id,
-        email: user?.email,
-        name: user?.name,
-        role: user?.role,
-      }),
-    );
-  }, [user]);
+    if (profileQUery.isLoading) return;
+    if (user) {
+      dispatch(
+        setUser({
+          _id: user?.id,
+          email: user?.email,
+          name: user?.name,
+          role: user?.role,
+        }),
+      );
+    } else {
+      navigate("/login");
+    }
+  }, [user, profileQUery.isLoading]);
 
   useEffect(() => {
     profileQUery.refetch();
