@@ -14,23 +14,18 @@ import {
 import { IconSearch, IconAlertCircle } from "@tabler/icons-react";
 import { useDebouncedValue } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { useAppDispatch } from "../store/store";
-import { addToCart } from "../features/cart/cartSlice";
 import ProductCard from "../components/ProductCard";
-import { useGetProductsQuery, usePostCartItemMutation } from "../store/api/generatedApi";
+import {
+  useGetProductsQuery,
+  usePostCartItemMutation,
+} from "../store/api/enhancedApi";
 
 const Products = () => {
-  const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 500);
 
-  const {
-    data,
-    isLoading,
-    isError,
-    refetch,
-  } = useGetProductsQuery({
+  const { data, isLoading, isError, refetch } = useGetProductsQuery({
     page,
     limit: 8,
     search: debouncedSearch,
@@ -39,16 +34,6 @@ const Products = () => {
   const [postCart] = usePostCartItemMutation();
 
   const handleAddToCart = async (product: any) => {
-    dispatch(
-      addToCart({
-        productId: product._id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        quantity: 1,
-      })
-    );
-
     try {
       await postCart({
         body: {
@@ -113,11 +98,11 @@ const Products = () => {
         <>
           <Grid>
             {products.map((product: any) => (
-              <Grid.Col key={product._id} span={{ base: 12, sm: 6, md: 3 }}>
-                <ProductCard
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                />
+              <Grid.Col
+                key={product._id}
+                span={{ base: 12, xs: 6, sm: 5, md: 4, lg: 3 }}
+              >
+                <ProductCard product={product} onAddToCart={handleAddToCart} />
               </Grid.Col>
             ))}
           </Grid>

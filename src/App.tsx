@@ -9,29 +9,29 @@ import { LoadingOverlay } from "@mantine/core";
 
 function App() {
   return (
-    <Suspense fallback={<LoadingOverlay/>}>
-    <Routes>
-      <Route element={<AppLayout />}>
-        {appRoutes?.map((item) => (
-          <Route
-          key={item.path}
-          path={item.path}
-          element={item.element}
-          ></Route>
-        ))}
-      </Route>
-      <Route element={<AdminLayout />}>
-        {adminRoutes?.map((item) => (
-          <Route
-          key={item.path}
-          path={item.path}
-          element={item.element}
-          ></Route>
-        ))}
-        <Route path="/admin" element={<Navigate to="/admin/products" />} />
-      </Route>
-    </Routes>
-        </Suspense>
+    <Suspense fallback={<LoadingOverlay />}>
+      <Routes>
+        <Route element={<AppLayout />}>
+          {appRoutes?.map((item) => (
+            <Route
+              key={item.path}
+              path={item.path}
+              element={item.element}
+            ></Route>
+          ))}
+        </Route>
+        <Route element={<AdminLayout />}>
+          {adminRoutes?.map((item) => (
+            <Route
+              key={item.path}
+              path={item.path}
+              element={item.element}
+            ></Route>
+          ))}
+          <Route path="/admin" element={<Navigate to="/admin/products" />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 }
 

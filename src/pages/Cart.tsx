@@ -17,14 +17,13 @@ import { notifications } from "@mantine/notifications";
 import { useAppDispatch } from "../store/store";
 import {
   clearCart as clearReduxCart,
-  removeFromCart,
   updateQuantity,
 } from "../features/cart/cartSlice";
 import {
   useDeleteCartClearMutation,
   useGetCartQuery,
   usePatchCartItemMutation,
-} from "../store/api/generatedApi";
+} from "../store/api/enhancedApi";
 
 const PLACEHOLDER = "https://placehold.co/100x100?text=No+Image";
 
@@ -65,18 +64,15 @@ const Cart = () => {
       await updateCart({
         body: { productId: productId, quantity: newQuantity },
       }).unwrap();
-      refetch();
     } catch (err) {
       console.log("Updated locally");
     }
   };
 
-  const handleRemove = async (id: string, productId: string) => {
-    dispatch(removeFromCart(productId));
-
+  const handleRemove = async (productId: string) => {
     try {
-      await updateCart({ body: { productId: id, quantity: 0 } }).unwrap();
-      refetch();
+      await updateCart({ body: { productId, quantity: 0 } }).unwrap();
+
       notifications.show({
         title: "Item Removed",
         message: "Item removed from cart.",
@@ -96,7 +92,6 @@ const Cart = () => {
 
     try {
       await clearCart().unwrap();
-      refetch();
     } catch (err) {
       // Ignored if local
     }
@@ -219,7 +214,7 @@ const Cart = () => {
                     variant="subtle"
                     color="red"
                     size="xs"
-                    onClick={() => handleRemove(item.id, item.productId)}
+                    onClick={() => handleRemove(item.productId)}
                   >
                     Remove
                   </Button>

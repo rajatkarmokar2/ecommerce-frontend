@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { clearUser } from "../features/auth/authSlice";
 import { notifications } from "@mantine/notifications";
 import { useGetCartQuery } from "../store/api/generatedApi";
+import { Button } from "@mantine/core";
+import { IconSettings } from "@tabler/icons-react";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -15,7 +17,8 @@ const Header = () => {
     skip: !user && !localStorage.getItem("token"),
   });
 
-  const apiCartItems = cartData?.cart?.items || cartData?.data?.items || cartData?.items;
+  const apiCartItems =
+    cartData?.cart?.items || cartData?.data?.items || cartData?.items;
   const cartCount = apiCartItems ? apiCartItems.length : reduxCartItems.length;
 
   const handleLogout = () => {
@@ -59,6 +62,10 @@ const Header = () => {
               </span>
             )}
           </button>
+
+          <Button>
+            <IconSettings />
+          </Button>
 
           {user ? (
             <div className="flex items-center gap-3">

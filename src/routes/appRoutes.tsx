@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import Settings from "../pages/Settings";
 const Cart = lazy(() => import("../pages/Cart"));
 const Checkout = lazy(() => import("../pages/Checkout"));
 const Home = lazy(() => import("../pages/Home"));
@@ -17,6 +18,7 @@ export const appPath = {
   login: "/login",
   register: "/register",
   checkout: "/checkout",
+  settings: "/settings",
 };
 
 const appRoutes = [
@@ -51,6 +53,10 @@ const appRoutes = [
   {
     path: appPath.checkout,
     element: <Checkout />,
+  },
+  {
+    path: appPath.settings,
+    element: <Settings />,
   },
 ];
 

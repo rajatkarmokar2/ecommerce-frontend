@@ -94,7 +94,7 @@ const Home = () => {
           {products.map((product: any) => (
             <Grid.Col
               key={product._id}
-              span={{ base: 12, sm: 6, md: 3, xs: 3 }}
+              span={{ base: 12, xs: 6, sm: 5, md: 4, lg: 3 }}
             >
               <ProductCard product={product} onAddToCart={handleAddToCart} />
             </Grid.Col>

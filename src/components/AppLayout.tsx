@@ -7,7 +7,7 @@ import {
   Badge,
   Avatar,
 } from "@mantine/core";
-import { IconShoppingCart } from "@tabler/icons-react";
+import { IconSettings, IconShoppingCart } from "@tabler/icons-react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../store/store";
 import {
@@ -16,6 +16,7 @@ import {
 } from "../store/api/generatedApi";
 import { useEffect } from "react";
 import { setUser } from "../features/auth/authSlice";
+import { appPath } from "../routes/appRoutes";
 
 const AppLayout = () => {
   const navigate = useNavigate();
@@ -103,14 +104,24 @@ const AppLayout = () => {
                     </Badge>
                   )}
                 </div>
-
-                <Avatar>{user?.name?.charAt(0).toUpperCase()}</Avatar>
               </>
             ) : (
               <Button variant="subtle" onClick={() => navigate("/login")}>
                 Login
               </Button>
             )}
+
+            <ActionIcon
+              variant="light"
+              size="lg"
+              onClick={() => navigate(appPath.settings)}
+            >
+              <IconSettings />
+            </ActionIcon>
+
+            {user ? (
+              <Avatar>{user?.name?.charAt(0).toUpperCase()}</Avatar>
+            ) : null}
           </Group>
         </Group>
       </AppShell.Header>
