@@ -1,6 +1,7 @@
 import { Card, Text, Button, Group, Badge } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import AppImage from "./AppImage";
+import { useAppSelector } from "../store/store";
 
 type Product = {
   _id: string;
@@ -18,15 +19,22 @@ type Props = {
 
 const ProductCard = ({ product, onAddToCart }: Props) => {
   const navigate = useNavigate();
+  const config = useAppSelector((s) => s.config);
+
+  const productImage = product?.image?.startsWith("/")
+    ? new URL(config?.api).origin + product?.image
+    : product?.image;
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Card.Section>
-        <AppImage className="object-cover h-60" src={product.image} />
+        <AppImage className="object-cover h-60" src={productImage} />
       </Card.Section>
 
       <Group justify="space-between" wrap="nowrap" mt="md" mb="xs">
-        <Text fw={500} truncate="end" textWrap="nowrap">{product.name}</Text>
+        <Text fw={500} truncate="end" textWrap="nowrap">
+          {product.name}
+        </Text>
 
         {product.stock !== undefined && (
           <Badge color={product.stock > 0 ? "green" : "red"}>

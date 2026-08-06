@@ -9,13 +9,11 @@ import {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setApi } from "../features/config/configSlice";
 
-type ApiType = "express" | "nest";
-
 const Settings = () => {
   const dispatch = useAppDispatch();
   const api = useAppSelector((state) => state.config.api);
 
-  const onChangeApi = (value: ApiType) => {
+  const onChangeApi = (value: string) => {
     dispatch(setApi(value));
 
     // 🔥 reset RTK cache so new API is used
@@ -32,7 +30,7 @@ const Settings = () => {
     const savedApi = localStorage.getItem("api");
 
     if (savedTheme === "dark") setColorScheme("dark");
-    if (savedApi === "nest") setApi("nest");
+    setApi(savedApi ?? "");
   }, []);
 
   // Apply theme
@@ -89,8 +87,8 @@ const Settings = () => {
               value={api}
               onChange={onChangeApi}
               data={[
-                { label: "Express", value: "express" },
-                { label: "NestJS", value: "nest" },
+                { label: "Express", value: import.meta.env.VITE_EXPRESS_API },
+                { label: "NestJS", value: import.meta.env.VITE_NEST_API },
               ]}
             />
           </div>

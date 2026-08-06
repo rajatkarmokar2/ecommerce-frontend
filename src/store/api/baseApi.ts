@@ -19,12 +19,7 @@ const rawBaseQuery = fetchBaseQuery({
 const dynamicBaseQuery: BaseQueryFn = async (args, api, extraOptions) => {
   const state = api.getState() as RootState;
 
-  const apiType = state.config.api;
-
-  const baseUrl =
-    apiType === "nest"
-      ? import.meta.env.VITE_NEST_API
-      : import.meta.env.VITE_EXPRESS_API;
+  const baseUrl = state.config.api;
 
   const adjustedArgs =
     typeof args === "string"

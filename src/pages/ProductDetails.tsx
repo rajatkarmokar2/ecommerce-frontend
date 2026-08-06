@@ -15,8 +15,11 @@ import {
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { addToCart } from "../features/cart/cartSlice";
-import { useAppDispatch } from "../store/store";
-import { useGetProductsByIdQuery, usePostCartItemMutation } from "../store/api/generatedApi";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import {
+  useGetProductsByIdQuery,
+  usePostCartItemMutation,
+} from "../store/api/generatedApi";
 
 const PLACEHOLDER = "https://placehold.co/400x300?text=No+Image";
 
@@ -24,8 +27,11 @@ const ProductDetails = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const [qty, setQty] = useState<number | string>(1);
+  const config = useAppSelector((s) => s.config);
 
-  const { data, isLoading, isError } = useGetProductsByIdQuery({ id: id as string });
+  const { data, isLoading, isError } = useGetProductsByIdQuery({
+    id: id as string,
+  });
   const [postCart, { isLoading: isAdding }] = usePostCartItemMutation();
 
   if (isLoading) {
@@ -37,6 +43,10 @@ const ProductDetails = () => {
   }
 
   const product = data?.data || (data && !data.data ? data : null);
+
+  const productImage = product?.image?.startsWith("/")
+    ? new URL(config?.api).origin + product?.image
+    : product?.image;
 
   if (isError || !product) {
     return (
@@ -56,7 +66,7 @@ const ProductDetails = () => {
         price: product.price,
         image: product.image,
         quantity: quantityNum,
-      })
+      }),
     );
 
     try {
@@ -86,7 +96,7 @@ const ProductDetails = () => {
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Image
-            src={product.image || PLACEHOLDER}
+            src={productImage || PLACEHOLDER}
             onError={(e) => (e.currentTarget.src = PLACEHOLDER)}
             height={400}
             fit="contain"
@@ -99,7 +109,9 @@ const ProductDetails = () => {
             <Title order={2}>{product.name}</Title>
             {product.stock !== undefined && (
               <Badge color={product.stock > 0 ? "green" : "red"}>
-                {product.stock > 0 ? `In Stock (${product.stock})` : "Out of Stock"}
+                {product.stock > 0
+                  ? `In Stock (${product.stock})`
+                  : "Out of Stock"}
               </Badge>
             )}
           </Group>
