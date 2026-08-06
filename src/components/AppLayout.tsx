@@ -43,10 +43,6 @@ const AppLayout = () => {
     }
   }, [user, profileQUery.isLoading]);
 
-  useEffect(() => {
-    profileQUery.refetch();
-  }, [pathname]);
-
   const cartQUery = useGetCartQuery();
 
   const cartCount = cartQUery.data?.cart?.items?.length;

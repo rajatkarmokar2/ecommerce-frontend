@@ -39,4 +39,5 @@ export const baseApi = createApi({
   baseQuery: dynamicBaseQuery,
   tagTypes: ["Products", "Cart", "Orders", "User", "Auth"],
   endpoints: () => ({}),
+  refetchOnMountOrArgChange: true,
 });
