@@ -8,7 +8,7 @@ import {
   Avatar,
 } from "@mantine/core";
 import { IconSettings, IconShoppingCart } from "@tabler/icons-react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../store/store";
 import {
   useGetAuthProfileQuery,
@@ -21,7 +21,6 @@ import { appPath } from "../routes/appRoutes";
 const AppLayout = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { pathname } = useLocation();
 
   const profileQUery = useGetAuthProfileQuery();
 
