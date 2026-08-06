@@ -13,7 +13,7 @@ import { useAppDispatch } from "../store/store";
 import {
   useGetAuthProfileQuery,
   useGetCartQuery,
-} from "../store/api/generatedApi";
+} from "../store/api/enhancedApi";
 import { useEffect } from "react";
 import { setUser } from "../features/auth/authSlice";
 import { appPath } from "../routes/appRoutes";

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { clearCart } from "../features/cart/cartSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
+import { useAppSelector } from "../store/store";
 import {
   Container,
   Title,
@@ -19,28 +18,38 @@ import {
 import { notifications } from "@mantine/notifications";
 import {
   useGetCartQuery,
-  usePostOrdersMutation,
   usePostPaymentCheckoutMutation,
 } from "../store/api/generatedApi";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.auth?.user);
+  const auth = useAppSelector((state) => state.auth);
 
   const { data: cartData } = useGetCartQuery(undefined);
-  const [createOrder] = usePostOrdersMutation();
   const [createCheckoutSession, { isLoading: isCheckingOut }] =
     usePostPaymentCheckoutMutation();
 
   const [form, setForm] = useState({
-    name: user?.name || "",
-    email: user?.email || "",
-    address: "123 Main Street",
-    city: "Mumbai",
-    postalCode: "400001",
-    country: "India",
+    name: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    state: "",
+    country: "",
   });
+
+  useEffect(() => {
+    if (auth.user) {
+      setForm({
+        name: auth.user?.name || "",
+        address: "123 Main Street",
+        city: "Mumbai",
+        postalCode: "400001",
+        state: "Maharashtra",
+        country: "India",
+      });
+    }
+  }, [auth]);
 
   const apiCartItems = cartData?.cart?.items;
   const cartItems = apiCartItems?.map((item: any) => ({
@@ -62,7 +71,7 @@ const Checkout = () => {
   };
 
   const handleCheckout = async () => {
-    if (!form.name || !form.email || !form.address) {
+    if (!form.name || !form.address) {
       notifications.show({
         title: "Validation Error",
         message: "Please fill all required fields",
@@ -72,37 +81,15 @@ const Checkout = () => {
     }
 
     try {
-      // 1. Create order
-      let orderId = "";
-      try {
-        const orderRes: any = await createOrder({
-          body: {
-            shippingAddress: {
-              address: form.address,
-              city: form.city,
-              postalCode: form.postalCode,
-              country: form.country,
-            },
-          },
-        }).unwrap();
-        orderId = orderRes?.order?._id || orderRes?._id || "";
-      } catch (e) {
-        return notifications.show({
-          title: "Order creation response processed",
-          message: "",
-          color: "green",
-        });
-      }
-
-      // 2. Initiate payment session
       try {
         const res = await createCheckoutSession({
           body: {
-            orderId,
+            cartId: cartData?.cart?._id,
+            shippingAddress: form,
           },
         }).unwrap();
         if (res?.success) {
-          navigate(res?.url);
+          window.open(res?.url, '_blank', 'noopener,noreferrer');
         }
       } catch (e) {
         return notifications.show({
@@ -112,15 +99,13 @@ const Checkout = () => {
         });
       }
 
-      // 3. Clear cart & notify
-      dispatch(clearCart());
-      notifications.show({
-        title: "Order Placed Successfully! 🎉",
-        message: "Thank you for your purchase. Your order has been recorded.",
-        color: "green",
-      });
+      // notifications.show({
+      //   title: "Order Placed Successfully! 🎉",
+      //   message: "Thank you for your purchase. Your order has been recorded.",
+      //   color: "green",
+      // });
 
-      navigate("/orders");
+      // navigate("/orders");
     } catch (error: any) {
       notifications.show({
         title: "Checkout Error",
@@ -167,14 +152,6 @@ const Checkout = () => {
                 value={form.name}
                 onChange={handleChange}
                 required
-              />
-              <TextInput
-                label="Email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-                type="email"
               />
               <Textarea
                 label="Address"

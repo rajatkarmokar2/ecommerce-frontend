@@ -18,9 +18,18 @@ export const enhancedApi = generatedApi.enhanceEndpoints({
     patchCartItem: {
       invalidatesTags: ["Cart"],
     },
-    deleteCartClear:{
+    deleteCartClear: {
       invalidatesTags: ["Cart"],
-    }
+    },
+    postAuthLogin: {
+      invalidatesTags: ["Auth"],
+    },
+    postAuthRegister: {
+      invalidatesTags: ["Auth"],
+    },
+    getAuthProfile: {
+      providesTags: ["Auth"],
+    },
   },
 });
 
@@ -29,5 +38,6 @@ export const {
   useGetCartQuery,
   usePostCartItemMutation,
   usePatchCartItemMutation,
-  useDeleteCartClearMutation
+  useDeleteCartClearMutation,
+  useGetAuthProfileQuery,
 } = enhancedApi;
