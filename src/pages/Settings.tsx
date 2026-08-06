@@ -7,7 +7,6 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { baseApi } from "../store/api/baseApi";
 import { setApi } from "../features/config/configSlice";
 
 type ApiType = "express" | "nest";
@@ -20,7 +19,7 @@ const Settings = () => {
     dispatch(setApi(value));
 
     // 🔥 reset RTK cache so new API is used
-    dispatch(baseApi.util.resetApiState());
+    // dispatch(baseApi.util.resetApiState());
   };
 
   //   const [api, setApi] = useState<ApiType>("express");
