@@ -126,7 +126,7 @@ const Cart = () => {
     );
   }
 
-  if (cartItems.length === 0) {
+  if (cartItems?.length === 0) {
     return (
       <Container size="md" py="xl">
         <Paper shadow="sm" p="xl" radius="md" withBorder>
